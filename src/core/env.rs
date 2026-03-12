@@ -2,63 +2,116 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 pub trait Workspace {
-    fn find_root(&self) -> Result<PathBuf, String>;
+    /// Finds the root of the Liferay project (DXP, LXC, or Client Extension)
+    fn find_root(&self) -> anyhow::Result<PathBuf>;
 
-    #[allow(dead_code)]
-    fn find_tomcat(&self, root: &Path) -> Result<PathBuf, String>;
+    /// Detects the type of Liferay project
+    fn detect_type(&self, root: &Path) -> ProjectType;
+
+    /// Returns the Liferay version if detectable (e.g. from gradle.properties)
+    fn get_liferay_version(&self, root: &Path) -> Option<String>;
 }
 
-pub struct LiferayWorkspace {
+#[derive(Debug, PartialEq)]
+pub enum ProjectType {
+    LiferayWorkspace,
+    LiferayCloud,
+    ClientExtension,
+    Unknown,
+}
+
+pub struct LiferayProject {
     pub current_dir: PathBuf,
 }
 
-impl Workspace for LiferayWorkspace {
-    fn find_root(&self) -> Result<PathBuf, String> {
-        // Only check the current directory for the 'bundles' folder
-        if self.current_dir.join("bundles").exists() {
-            Ok(self.current_dir.clone())
+impl Workspace for LiferayProject {
+    fn find_root(&self) -> anyhow::Result<PathBuf> {
+        let mut path = self.current_dir.clone();
+        loop {
+            // Liferay Workspace (Traditional)
+            if path.join("bundles").exists()
+                || path.join("gradle.properties").exists() && path.join("modules").exists()
+            {
+                return Ok(path);
+            }
+
+            // Liferay Cloud
+            if path.join("liferay").exists() || path.join("webserver").exists() {
+                return Ok(path);
+            }
+
+            // Client Extension
+            if path.join("client-extension.yaml").exists() {
+                return Ok(path);
+            }
+
+            if !path.pop() {
+                break;
+            }
+        }
+        anyhow::bail!("Liferay project root not found.")
+    }
+
+    fn detect_type(&self, root: &Path) -> ProjectType {
+        if root.join("liferay").exists() && root.join("webserver").exists() {
+            ProjectType::LiferayCloud
+        } else if root.join("client-extension.yaml").exists() {
+            ProjectType::ClientExtension
+        } else if root.join("bundles").exists() || root.join("gradle.properties").exists() {
+            ProjectType::LiferayWorkspace
         } else {
-            Err(
-                "Liferay Workspace not found in the current directory. (Missing 'bundles' folder)"
-                    .to_string(),
-            )
+            ProjectType::Unknown
         }
     }
 
-    fn find_tomcat(&self, root: &Path) -> Result<PathBuf, String> {
-        let bundles = root.join("bundles");
-        let entries = fs::read_dir(bundles).map_err(|_| "Cannot read 'bundles' folder")?;
+    fn get_liferay_version(&self, root: &Path) -> Option<String> {
+        // Search in liferay/gradle.properties (LXC) or root gradle.properties (Workspace)
+        let paths = vec![
+            root.join("liferay").join("gradle.properties"),
+            root.join("gradle.properties"),
+        ];
 
-        for entry in entries.flatten() {
-            let name = entry.file_name().to_string_lossy().to_lowercase();
-            if (name.starts_with("tomcat-") || name == "tomcat") && entry.path().is_dir() {
-                return Ok(entry.path());
+        for path in paths {
+            if let Ok(content) = fs::read_to_string(path) {
+                for line in content.lines() {
+                    if line.starts_with("liferay.workspace.product=") {
+                        let product = line.split('=').nth(1)?.trim();
+                        // Basic mapping
+                        if product.contains("7.4") || product.starts_with("dxp-202") {
+                            return Some("7.4".to_string());
+                        }
+                        if product.contains("7.3") {
+                            return Some("7.3".to_string());
+                        }
+                        if product.contains("7.2") {
+                            return Some("7.2".to_string());
+                        }
+                        if product.contains("7.1") {
+                            return Some("7.1".to_string());
+                        }
+                    }
+                }
             }
         }
-        Err("Tomcat directory not found inside the 'bundles' folder.".to_string())
+        None
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
     use tempfile::tempdir;
 
     #[test]
-    fn test_find_tomcat_flexible_naming() {
+    fn test_detection() {
         let dir = tempdir().unwrap();
-        let bundles_path = dir.path().join("bundles");
-        let tomcat_path = bundles_path.join("tomcat-9.0.90");
+        let root = dir.path();
+        fs::create_dir(root.join("liferay")).unwrap();
+        fs::create_dir(root.join("webserver")).unwrap();
 
-        fs::create_dir_all(&tomcat_path).unwrap();
-
-        let ws = LiferayWorkspace {
-            current_dir: dir.path().to_path_buf(),
+        let project = LiferayProject {
+            current_dir: root.to_path_buf(),
         };
-
-        // This simulates finding the root and then the tomcat dir
-        let found_tomcat = ws.find_tomcat(dir.path()).unwrap();
-        assert!(found_tomcat.to_string_lossy().contains("tomcat-9.0.90"));
+        assert_eq!(project.detect_type(root), ProjectType::LiferayCloud);
     }
 }
