@@ -59,18 +59,22 @@ cargo build
 cargo run -- --help
 ```
 
-## Distribution (macOS)
+## Distribution (macOS, Linux, Windows)
 
-To avoid "Unidentified Developer" warnings on macOS, we recommend building from source via Homebrew. See `formula.rb.example` for details.
+To avoid "Unidentified Developer" warnings on macOS and ensure a secure, user-level installation on Windows, we recommend building from source via **Homebrew** or **Scoop**. 
 
-### Automated Homebrew Tap Updates via Gemini
+### Automated Distribution via Gemini
 
-This template includes an automated prompt for Gemini CLI to handle updating your Homebrew tap repository with new releases. 
+This template includes an automated prompt for Gemini CLI to handle updating your Homebrew tap and Scoop bucket repositories with new releases.
 
 When you create a new GitHub release, you can simply ask Gemini:
 
 ```bash
-"Please execute the steps in .gemini/prompts/update-homebrew-tap.md to update my homebrew tap located at ../homebrew-tap"
+"Please execute the steps in .gemini/prompts/update-distribution-channels.md to update my distribution repositories"
 ```
 
-Gemini will automatically extract your tool's version and description, calculate the SHA256 hash of the release tarball, format the `formula.rb.example`, and commit/push the new formula to your local `homebrew-tap` repository.
+Gemini will automatically:
+1. Extract metadata from `Cargo.toml`.
+2. Calculate the SHA256 hash of the release tarball.
+3. Generate and write the Homebrew formula (`formula.rb.example`) and Scoop manifest (`scoop.json.example`).
+4. Commit and push the updates to your local `homebrew-tap` and `scoop-bucket` repositories.
