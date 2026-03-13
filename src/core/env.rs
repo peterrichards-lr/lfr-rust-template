@@ -10,6 +10,9 @@ pub trait Workspace {
 
     /// Returns the Liferay version if detectable (e.g. from gradle.properties)
     fn get_liferay_version(&self, root: &Path) -> Option<String>;
+
+    /// Specifically for local DXP: Finds the Tomcat directory inside 'bundles'
+    fn find_tomcat(&self, root: &Path) -> anyhow::Result<PathBuf>;
 }
 
 #[derive(Debug, PartialEq)]
@@ -95,6 +98,26 @@ impl Workspace for LiferayProject {
         }
         None
     }
+
+    fn find_tomcat(&self, root: &Path) -> anyhow::Result<PathBuf> {
+        let bundles = root.join("bundles");
+        if !bundles.exists() {
+            anyhow::bail!("No 'bundles' directory found in root: {:?}", root);
+        }
+
+        for entry in fs::read_dir(bundles)? {
+            let entry = entry?;
+            let path = entry.path();
+            if path.is_dir() {
+                let name = path.file_name().unwrap_or_default().to_string_lossy();
+                if name.starts_with("tomcat-") {
+                    return Ok(path);
+                }
+            }
+        }
+
+        anyhow::bail!("No 'tomcat-*' directory found inside 'bundles'")
+    }
 }
 
 #[cfg(test)]
@@ -113,5 +136,20 @@ mod tests {
             current_dir: root.to_path_buf(),
         };
         assert_eq!(project.detect_type(root), ProjectType::LiferayCloud);
+    }
+
+    #[test]
+    fn test_find_tomcat() {
+        let dir = tempdir().unwrap();
+        let root = dir.path();
+        let bundles = root.join("bundles");
+        let tomcat = bundles.join("tomcat-9.0.82");
+        fs::create_dir_all(&tomcat).unwrap();
+
+        let project = LiferayProject {
+            current_dir: root.to_path_buf(),
+        };
+        let found = project.find_tomcat(root).unwrap();
+        assert_eq!(found, tomcat);
     }
 }

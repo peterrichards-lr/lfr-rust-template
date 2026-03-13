@@ -62,3 +62,15 @@ cargo run -- --help
 ## Distribution (macOS)
 
 To avoid "Unidentified Developer" warnings on macOS, we recommend building from source via Homebrew. See `formula.rb.example` for details.
+
+### Automated Homebrew Tap Updates via Gemini
+
+This template includes an automated prompt for Gemini CLI to handle updating your Homebrew tap repository with new releases. 
+
+When you create a new GitHub release, you can simply ask Gemini:
+
+```bash
+"Please execute the steps in .gemini/prompts/update-homebrew-tap.md to update my homebrew tap located at ../homebrew-tap"
+```
+
+Gemini will automatically extract your tool's version and description, calculate the SHA256 hash of the release tarball, format the `formula.rb.example`, and commit/push the new formula to your local `homebrew-tap` repository.
