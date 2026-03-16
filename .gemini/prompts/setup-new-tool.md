@@ -1,6 +1,6 @@
 # Gemini Prompt: Setup New Tool Repository
 
-**Goal:** Transform the cloned template repo into a production-ready repository for a new Liferay Rust CLI tool.
+**Goal:** Transform the cloned template repo into a production-ready repository for a new Liferay Rust CLI tool, featuring an industry-standard, user-friendly README.
 
 **Instructions for Gemini:**
 When a user asks you to "setup the new tool," "convert this template," or "run the initialization," follow these steps strictly:
@@ -28,11 +28,24 @@ In `.github/workflows/release.yml`:
 - Ensure the `asset_name` patterns (e.g., `{{TOOL_NAME}}-linux-x86_64.tar.gz`) use the new name correctly.
 
 ### 4. Update README.md
-- Replace the main title with the **Tool Name**.
-- Replace the description with the **Short Description**.
-- Update the "Getting Started" section to reflect that the tool has already been initialized.
-- **Update Installation commands:** Replace `[github-user]`, `[tool-name]`, and `[bucket-name]` placeholders with the user's actual information.
-- Update any other command examples (e.g., `cargo run -- --help`) to use the new tool's context.
+Replace the entire content of `README.md` with a professional, production-ready document following this structure:
+
+- **Header & Badges:** 
+  - Title: **Tool Name**
+  - Badges for: GitHub Release (`https://img.shields.io/github/v/release/[github-user]/[tool-name]`), License (`https://img.shields.io/github/license/[github-user]/[tool-name]`), and Rust CI status (`https://github.com/[github-user]/[tool-name]/actions/workflows/rust.yml/badge.svg`).
+- **Introduction:** A concise, one-paragraph summary of the **Short Description**.
+- **Features:** A high-level bulleted list highlighting the tool's value (e.g., "Cross-Platform", "Liferay-Aware", "Safe & Secure").
+- **Installation:** A multi-platform guide:
+  - **Homebrew (macOS/Linux):** `brew tap [github-user]/homebrew-tap && brew install [tool-name]`
+  - **Scoop (Windows):** `scoop bucket add [tool-name]-bucket https://github.com/[github-user]/scoop-bucket && scoop install [tool-name]`
+  - **WSL:** Instructions for installing via Homebrew within WSL.
+  - **Manual Download:** Link to the GitHub Releases page.
+  - **Build from Source:** `cargo install --path .`
+- **Usage:** 
+  - Primary help command: `[tool-name] --help`
+  - A placeholder section for "Common Patterns".
+- **Disclaimer:** A bold safety section explaining that the tool is provided "as-is" and any risks associated with its use (especially if it performs destructive actions).
+- **License:** MIT.
 
 ### 5. Final Setup & Reminders
 Finalize the environment:
