@@ -18,7 +18,11 @@ Read `Cargo.toml` to extract:
 - **Class Name:** Convert `REPO_NAME` to PascalCase/CamelCase (e.g., `lfr-local` -> `LfrLocal`) for the `CLASS_NAME`.
 - **Release URL:** `https://github.com/{{GITHUB_USER}}/{{REPO_NAME}}/archive/refs/tags/v{{VERSION}}.tar.gz`
 - **Calculate SHA256:**
-  *Wait for user confirmation that the release is published.* Then run:
+  *First, verify the release exists:*
+  ```bash
+  curl -Is <Release URL> | head -n 1
+  ```
+  If it returns 200, calculate the hash:
   ```bash
   curl -sL <Release URL> | shasum -a 256
   ```
@@ -27,7 +31,11 @@ Read `Cargo.toml` to extract:
 ---
 
 ### 3. Update Homebrew (macOS/Linux)
-- **Locate Tap:** Find the local path to the `homebrew-tap` repo (default: `../homebrew-tap`).
+- **Locate & Verify Tap:** Find the local path to the `homebrew-tap` repo (default: `../homebrew-tap`). Verify it is a git repository:
+  ```bash
+  [ -d "../homebrew-tap/.git" ] && echo "Tap found" || echo "Tap NOT found"
+  ```
+  *If not found, ask the user for the correct path before proceeding.*
 - **Generate Formula:** Read `formula.rb.example`, replace placeholders, and write to `<homebrew-tap-path>/Formula/{{REPO_NAME}}.rb`.
 - **Commit & Push:**
   ```bash
@@ -40,7 +48,11 @@ Read `Cargo.toml` to extract:
 ---
 
 ### 4. Update Scoop (Windows)
-- **Locate Bucket:** Find the local path to the `scoop-bucket` repo (default: `../scoop-bucket`).
+- **Locate & Verify Bucket:** Find the local path to the `scoop-bucket` repo (default: `../scoop-bucket`). Verify it is a git repository:
+  ```bash
+  [ -d "../scoop-bucket/.git" ] && echo "Bucket found" || echo "Bucket NOT found"
+  ```
+  *If not found, ask the user for the correct path before proceeding.*
 - **Generate Manifest:** Read `scoop.json.example`, replace placeholders, and write to `<scoop-bucket-path>/bucket/{{REPO_NAME}}.json`.
 - **Commit & Push:**
   ```bash
@@ -49,6 +61,14 @@ Read `Cargo.toml` to extract:
   git commit -m "feat: update {{REPO_NAME}} v{{VERSION}}"
   git push origin main
   ```
+
+---
+
+### 5. Cleanup Examples
+Once the distribution files are in place and working in their respective repositories, delete the template examples from the project root:
+```bash
+rm formula.rb.example scoop.json.example
+```
 
 ---
 
