@@ -59,7 +59,11 @@ A modular template for building high-performance, cross-platform CLI tools for L
 3. **Manual Customization:**
    - Customize subcommands in `src/cli.rs`.
    - Update `LICENSE` if necessary.
-4. **First Release:** Push a tag (e.g., `v1.0.0`) to trigger an automated release across all major operating systems.
+4. **Enabling Releases:** By default, the automated release workflow is disabled for this template to avoid unintentional builds. When you are ready for your first release:
+   - Go to `.github/workflows/release.yml`.
+   - Uncomment the `push` and `tags` triggers (remove the `#` characters).
+   - Commit and push the changes.
+   - Push a tag (e.g., `v1.0.0`) to trigger an automated release across all major operating systems.
 
 ## Installation (End-Users)
 

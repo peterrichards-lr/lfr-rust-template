@@ -26,6 +26,7 @@ Before making any changes, ask the user the following questions:
 In `.github/workflows/release.yml`:
 - Replace all occurrences of `REPLACE_ME` with the **Tool Name**.
 - Ensure the `asset_name` patterns (e.g., `{{TOOL_NAME}}-linux-x86_64.tar.gz`) use the new name correctly.
+- **Enable Automated Releases:** Uncomment the `push` and `tags` triggers.
 
 ### 4. Update README.md
 Replace the entire content of `README.md` with a professional, production-ready document following this structure:
