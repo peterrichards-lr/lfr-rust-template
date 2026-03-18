@@ -22,9 +22,9 @@ Read `Cargo.toml` to extract:
   ```bash
   curl -Is <Release URL> | head -n 1
   ```
-  If it returns 200, calculate the hash:
+  If it returns 200, calculate the hash (extracting just the hex string):
   ```bash
-  curl -sL <Release URL> | shasum -a 256
+  curl -sL <Release URL> | shasum -a 256 | cut -d ' ' -f 1
   ```
   This is your `{{SHA256}}`.
 
