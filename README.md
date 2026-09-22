@@ -21,8 +21,12 @@ A modular template for building high-performance, cross-platform CLI tools for L
 .
 ├── .cargo/config.toml        # Cargo aliases (setup, lint)
 ├── .gemini/prompts/          # Automated Gemini CLI workflows
-├── .github/workflows/        # Multi-OS CI/CD (Release, Rust)
+├── .github/
+│   ├── dependabot.yml        # Automated dependency maintenance
+│   └── workflows/            # Multi-OS CI/CD (Release, Rust)
 ├── .githooks/pre-commit      # Shared cross-platform git hook
+├── scripts/
+│   └── doctor.py             # Placeholder verification gate
 ├── src/
 │   ├── main.rs               # Command routing
 │   ├── core/
@@ -46,7 +50,7 @@ A modular template for building high-performance, cross-platform CLI tools for L
 - **Git Hooks:** To ensure consistent code style, activate the shared pre-commit hooks:
   - Run: `git config core.hooksPath .githooks`.
   - On macOS/Linux: `chmod +x .githooks/pre-commit`.
-  - This hook automatically runs `cargo fmt` and `cargo clippy` before each commit.
+  - This hook automatically runs `scripts/doctor.py`, `cargo fmt`, and `cargo clippy` before each commit.
 
 ## Getting Started
 
@@ -55,7 +59,7 @@ A modular template for building high-performance, cross-platform CLI tools for L
    ```bash
    "Please execute .gemini/prompts/setup-new-tool.md to initialize my new project"
    ```
-   Gemini will automatically gather your project metadata (name, description, features) and update all core configuration files (`Cargo.toml`, `.github/workflows/release.yml`, and this `README.md`) for you.
+   Gemini will automatically gather your project metadata (name, description, features) and update core configuration files (`Cargo.toml` and this `README.md`) for you. Release workflows automatically derive binary names directly from `Cargo.toml`.
 3. **Manual Customization:**
    - Customize subcommands in `src/cli.rs`.
    - Update `LICENSE` if necessary.
@@ -124,3 +128,7 @@ Gemini will automatically:
 2. Calculate the SHA256 hash of the release tarball.
 3. Generate and write the Homebrew formula (`formula.rb.example`) and Scoop manifest (`scoop.json.example`).
 4. Commit and push the updates to your local `homebrew-tap` and `scoop-bucket` repositories.
+
+<!-- markdownlint-disable MD049 -->
+---
+*Last Updated: 2026-09-22* | *Last Reviewed: 2026-09-22*
