@@ -2,12 +2,14 @@
 
 A modular template for building high-performance, cross-platform CLI tools for Liferay DXP, Liferay Cloud (LXC), and Client Extensions.
 
-## New in v0.3.0
+## New in v0.6.0
 
-- **Automated Initialization:** New Gemini prompt (`setup-new-tool.md`) to initialize metadata, features, and CI/CD automatically.
-- **Native Git Hooks:** Shared, cross-platform pre-commit hooks (`.githooks/`) for automated formatting and Clippy lints.
-- **Quality Aliases:** Built-in Cargo aliases for project setup, linting, and formatting checks.
-- **Robust Distribution:** Enhanced automated distribution with pre-flight URL validation and repository discovery.
+- **Release Management & Changelog:** Adopted release management architecture from `ai-agent-template` with `CHANGELOG.md` and automated release note extraction via `scripts/release.py`.
+- **Dynamic Binary Derivation:** Release workflows dynamically derive binary and asset names from `Cargo.toml`, removing template placeholders.
+- **Doctor Verification Gate:** Added `scripts/doctor.py` and pre-commit hook integration to guard against unreplaced placeholders.
+- **Intel macOS Release Target:** Cross-compiles `x86_64-apple-darwin` binaries on `macos-latest` runners alongside Apple Silicon.
+- **Pinned Actions & Dependabot:** All GitHub Actions pinned to immutable commit SHAs with automated weekly Dependabot updates.
+- **Modernized Dependencies:** Upgraded core and optional dependencies (`reqwest 0.13`, `scraper 0.27`, `serde 1.0`, `clap 4.5`, etc.).
 
 ## Features
 
@@ -26,7 +28,8 @@ A modular template for building high-performance, cross-platform CLI tools for L
 │   └── workflows/            # Multi-OS CI/CD (Release, Rust)
 ├── .githooks/pre-commit      # Shared cross-platform git hook
 ├── scripts/
-│   └── doctor.py             # Placeholder verification gate
+│   ├── doctor.py             # Placeholder verification gate
+│   └── release.py            # Changelog extraction and tagging
 ├── src/
 │   ├── main.rs               # Command routing
 │   ├── core/
@@ -37,6 +40,7 @@ A modular template for building high-performance, cross-platform CLI tools for L
 │   │   ├── git.rs            # Git wrappers
 │   │   └── xml.rs            # Recursive XML logic
 │   └── cli.rs                # Command definitions
+├── CHANGELOG.md              # Keep a Changelog history
 ├── formula.rb.example        # Homebrew template
 ├── scoop.json.example        # Scoop template
 ├── .gitignore                # Tracks Cargo.lock for reliable CI
