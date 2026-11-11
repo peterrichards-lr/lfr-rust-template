@@ -31,6 +31,7 @@ A modular template for building high-performance, cross-platform CLI tools for L
 ├── .gemini/prompts/          # Automated Gemini CLI workflows
 ├── .github/
 │   ├── dependabot.yml        # Automated dependency maintenance
+│   ├── rulesets/             # Default branch protection (see Repository Settings)
 │   └── workflows/            # Multi-OS CI/CD (Release, Rust)
 ├── .githooks/pre-commit      # Shared cross-platform git hook
 ├── scripts/
@@ -102,6 +103,31 @@ cargo build
 # Run with arguments
 cargo run -- --help
 ```
+
+## Repository Settings
+
+Apply these once per new repository so that both people and bots change the default branch through pull requests, with no bypass actors:
+
+```bash
+REPO=[github-user]/[tool-name]
+
+# Squash merges only, auto-merge on, and branches deleted after merge
+gh api -X PATCH repos/$REPO -F allow_auto_merge=true -F delete_branch_on_merge=true \
+  -F allow_squash_merge=true -F allow_merge_commit=false -F allow_rebase_merge=false
+
+# Let GitHub Actions open pull requests
+gh api -X PUT repos/$REPO/actions/permissions/workflow \
+  -f default_workflow_permissions=write -F can_approve_pull_request_reviews=true
+
+# Label for pull requests that intentionally have no linked issue (Dependabot uses it)
+gh label create no-issue-needed -R $REPO --color ededed \
+  --description "PR intentionally has no linked issue (bot or trivial change)"
+
+# Protect the default branch: pull request required, 0 approvals, squash only, linear history
+gh api -X POST repos/$REPO/rulesets --input .github/rulesets/protect-main.json
+```
+
+A workflow that needs to change the default branch should push a dated branch, open a pull request, add the `no-issue-needed` label, and run `gh pr merge --auto --squash`.
 
 ## Releasing
 

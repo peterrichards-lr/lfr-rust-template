@@ -54,6 +54,7 @@ Replace the entire content of `README.md` with a professional, production-ready 
 Finalize the environment:
 - **Initialize Hooks:** Run the command: `git config core.hooksPath .githooks`
 - **Set Permissions:** (Unix only) If on macOS/Linux, run: `chmod +x .githooks/pre-commit`
+- **Repository Settings:** Remind the user to apply the commands in the Repository Settings section of the template `README.md` once the GitHub repository exists.
 - **Run Doctor:** Run `python3 scripts/doctor.py` to ensure no unresolved template placeholders remain.
 - **Verify:** Remind the user they can now run `cargo lint` and `cargo fmt-check`.
 - Update `LICENSE` if necessary.
