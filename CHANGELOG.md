@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+
+- Add `.github/rulesets/protect-main.json` and a Repository Settings section to `README.md`: pull requests required with 0 approvals, squash only, Actions allowed to open PRs, and the `no-issue-needed` label.
+
+### Changed
+
+- Label Dependabot pull requests `no-issue-needed`, alongside the default `dependencies` and ecosystem labels, so bot PRs are marked as intentionally having no linked issue.
 
 ## [0.7.0] - 2026-11-11
 
