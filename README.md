@@ -113,7 +113,7 @@ cargo run -- --help
    git push origin vX.Y.Z
    ```
    The release workflow fails if the tag isn't annotated, doesn't match `Cargo.toml`, or has no `CHANGELOG.md` section.
-4. Update the distribution channels (see below). The Scoop bucket picks up later releases automatically once a tool's manifest exists.
+4. For a tool's first release, add it to the distribution channels (see below). After that, the Homebrew tap and Scoop bucket pick up new releases automatically within a couple of hours.
 
 ## Distribution (macOS, Linux, Windows)
 
@@ -135,7 +135,7 @@ If you wish to keep your distribution repositories **private**:
 
 This template includes an automated prompt for Gemini CLI to handle updating your Homebrew tap and Scoop bucket repositories with new releases.
 
-When you create a new GitHub release, you can simply ask Gemini:
+Once a tool is in the tap and bucket, both update themselves from new GitHub releases, so this is only needed for a tool's first release. Ask Gemini:
 
 ```bash
 "Please execute the steps in .gemini/prompts/update-distribution-channels.md to update my distribution repositories"

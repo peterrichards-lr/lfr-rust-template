@@ -20,7 +20,7 @@ _Nothing yet._
 ### Changed
 
 - Reject release tags that don't match the `Cargo.toml` version in `.github/workflows/release.yml`.
-- Skip the Scoop step in `update-distribution-channels.md` when the bucket already has a manifest, since it auto-updates.
+- Skip the Homebrew and Scoop steps in `update-distribution-channels.md` when the tool is already published, since the tap and bucket auto-update; new formulas are added to the tap's update workflow.
 - Name the formula and manifest after the binary rather than the repository in `update-distribution-channels.md`, so tools whose command differs from their repo name (e.g. `lwu`) are published correctly.
 - Bump `rustls` to 0.23.46.
 
