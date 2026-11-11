@@ -27,7 +27,7 @@ A modular template for building high-performance, cross-platform CLI tools for L
 
 ```plaintext
 .
-├── .cargo/config.toml        # Cargo aliases (setup, lint)
+├── .cargo/config.toml        # Cargo aliases (lint, fmt-check)
 ├── .gemini/prompts/          # Automated Gemini CLI workflows
 ├── .github/
 │   ├── dependabot.yml        # Automated dependency maintenance

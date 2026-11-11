@@ -28,6 +28,7 @@ _Nothing yet._
 
 - Stop `update-distribution-channels.md` from deleting `formula.rb.example` and `scoop.json.example`, which every later release needs.
 - Correct the Scoop bucket name in the installation instructions.
+- Remove the `cargo setup-hooks` alias, which could never work because Cargo aliases only run Cargo subcommands. Use `git config core.hooksPath .githooks`.
 - Remove README instructions to uncomment release triggers that are already enabled.
 
 ## [0.6.0] - 2026-09-22
