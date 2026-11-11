@@ -12,6 +12,6 @@ class {{CLASS_NAME}} < Formula
   end
 
   test do
-    system "#{bin}/{{BINARY_NAME}}", "--help"
+    assert_match version.to_s, shell_output("#{bin}/{{BINARY_NAME}} --version")
   end
 end

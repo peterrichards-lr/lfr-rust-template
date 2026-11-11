@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(name = "lfr-tool")]
-#[command(about = "Generic Liferay Rust Tool", long_about = None)]
+#[command(version, about = "Generic Liferay Rust Tool", long_about = None)]
 pub struct App {
     #[command(subcommand)]
     pub command: AppCommands,
