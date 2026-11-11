@@ -1,9 +1,11 @@
 [package]
 name = "lfr-tool-template"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 authors = ["Peter Richards"]
 description = "A modular template for Liferay Rust CLI tools with Workspace, LXC, and Client Extension support."
+repository = "https://github.com/peterrichards-lr/lfr-rust-template"
+license = "MIT"
 
 [dependencies]
 # CLI Argument parsing

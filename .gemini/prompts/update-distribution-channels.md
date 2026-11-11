@@ -14,6 +14,8 @@ Read `Cargo.toml` to extract:
 - `description` (`DESCRIPTION`)
 - `repository` (Extract the `GITHUB_USER` and ensure `REPO_NAME` matches)
 
+Then confirm the tag `v{{VERSION}}` exists (`git tag --list v{{VERSION}}`). If it does not, stop: the release must be tagged first (see the Releasing section of `README.md`). The Release workflow rejects tags that don't match `Cargo.toml`.
+
 ### 2. Prepare Template Values
 - **Class Name:** Convert `REPO_NAME` to PascalCase/CamelCase (e.g., `lfr-local` -> `LfrLocal`) for the `CLASS_NAME`.
 - **Release URL:** `https://github.com/{{GITHUB_USER}}/{{REPO_NAME}}/archive/refs/tags/v{{VERSION}}.tar.gz`
@@ -48,6 +50,8 @@ Read `Cargo.toml` to extract:
 ---
 
 ### 4. Update Scoop (Windows)
+The bucket's `auto-update.yml` workflow updates existing manifests from new GitHub releases, so this step is only needed when `bucket/{{REPO_NAME}}.json` does not exist yet. If it already exists, skip this step.
+
 - **Locate & Verify Bucket:** Find the local path to the `scoop-bucket` repo (default: `../scoop-bucket`). Verify it is a git repository:
   ```bash
   [ -d "../scoop-bucket/.git" ] && echo "Bucket found" || echo "Bucket NOT found"
@@ -64,11 +68,8 @@ Read `Cargo.toml` to extract:
 
 ---
 
-### 5. Cleanup Examples
-Once the distribution files are in place and working in their respective repositories, delete the template examples from the project root:
-```bash
-rm formula.rb.example scoop.json.example
-```
+### 5. Keep the Templates
+Do **not** delete `formula.rb.example` or `scoop.json.example`. They are needed for every future release.
 
 ---
 

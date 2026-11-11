@@ -2,6 +2,12 @@
 
 A modular template for building high-performance, cross-platform CLI tools for Liferay DXP, Liferay Cloud (LXC), and Client Extensions.
 
+## New in v0.7.0
+
+- **Version Gate:** The release workflow rejects tags that don't match the `Cargo.toml` version, so `--version` always reports the released version.
+- **`--version` Flag:** The CLI exposes `--version`, and the Homebrew formula test checks it.
+- **Distribution Fixes:** The distribution prompt keeps `formula.rb.example` and `scoop.json.example` for future releases and skips Scoop updates the bucket already automates.
+
 ## New in v0.6.0
 
 - **Release Management & Changelog:** Adopted release management architecture from `ai-agent-template` with `CHANGELOG.md` and automated release note extraction via `scripts/release.py`.
@@ -67,11 +73,7 @@ A modular template for building high-performance, cross-platform CLI tools for L
 3. **Manual Customization:**
    - Customize subcommands in `src/cli.rs`.
    - Update `LICENSE` if necessary.
-4. **Enabling Releases:** By default, the automated release workflow is disabled for this template to avoid unintentional builds. When you are ready for your first release:
-   - Go to `.github/workflows/release.yml`.
-   - Uncomment the `push` and `tags` triggers (remove the `#` characters).
-   - Commit and push the changes.
-   - Push a tag (e.g., `v1.0.0`) to trigger an automated release across all major operating systems.
+4. **First Release:** Follow [Releasing](#releasing). Pushing a tag such as `v0.1.0` builds and publishes binaries for all major operating systems.
 
 ## Installation (End-Users)
 
@@ -87,7 +89,7 @@ brew install [tool-name]
 ### Scoop (Windows)
 
 ```bash
-scoop bucket add [tool-name]-bucket https://github.com/[github-user]/scoop-bucket
+scoop bucket add [github-user] https://github.com/[github-user]/scoop-bucket
 scoop install [tool-name]
 ```
 
@@ -100,6 +102,18 @@ cargo build
 # Run with arguments
 cargo run -- --help
 ```
+
+## Releasing
+
+1. Bump `version` in `Cargo.toml` and run `cargo build` to update `Cargo.lock`.
+2. Move the `[Unreleased]` entries in `CHANGELOG.md` into a new `## [x.y.z] - YYYY-MM-DD` section.
+3. Commit, then create an annotated tag and push it:
+   ```bash
+   python3 scripts/release.py --tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+   The release workflow fails if the tag isn't annotated, doesn't match `Cargo.toml`, or has no `CHANGELOG.md` section.
+4. Update the distribution channels (see below). The Scoop bucket picks up later releases automatically once a tool's manifest exists.
 
 ## Distribution (macOS, Linux, Windows)
 
@@ -135,4 +149,4 @@ Gemini will automatically:
 
 <!-- markdownlint-disable MD049 -->
 ---
-*Last Updated: 2026-09-22* | *Last Reviewed: 2026-09-22*
+*Last Updated: 2026-11-11* | *Last Reviewed: 2026-11-11*

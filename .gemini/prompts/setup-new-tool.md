@@ -20,12 +20,14 @@ Before making any changes, ask the user the following questions:
 - Set `package.version` to `0.1.0`.
 - Set `package.description` to the **Short Description**.
 - Update `package.authors`.
+- Set `package.repository` to `https://github.com/[github-user]/[tool-name]` and `package.license` to `"MIT"`. The distribution prompt reads these.
 - Update the `default` features list in the `[features]` section based on user preference.
 
-### 3. Enable GitHub Release Workflow
+### 3. Check the GitHub Release Workflow
 In `.github/workflows/release.yml`:
 - Binary and release asset names are derived automatically from `Cargo.toml`.
-- **Enable Automated Releases:** Uncomment the `push` and `tags` triggers.
+- The workflow runs when a `v*` tag is pushed. It requires an annotated tag that matches the `Cargo.toml` version and a matching section in `CHANGELOG.md`.
+- Reset `CHANGELOG.md` so it contains only an empty `[Unreleased]` section.
 
 ### 4. Update README.md
 Replace the entire content of `README.md` with a professional, production-ready document following this structure:
@@ -37,13 +39,14 @@ Replace the entire content of `README.md` with a professional, production-ready 
 - **Features:** A high-level bulleted list highlighting the tool's value (e.g., "Cross-Platform", "Liferay-Aware", "Safe & Secure").
 - **Installation:** A multi-platform guide:
   - **Homebrew (macOS/Linux):** `brew tap [github-user]/homebrew-tap && brew install [tool-name]`
-  - **Scoop (Windows):** `scoop bucket add [tool-name]-bucket https://github.com/[github-user]/scoop-bucket && scoop install [tool-name]`
+  - **Scoop (Windows):** `scoop bucket add [github-user] https://github.com/[github-user]/scoop-bucket && scoop install [tool-name]`
   - **WSL:** Instructions for installing via Homebrew within WSL.
   - **Manual Download:** Link to the GitHub Releases page.
   - **Build from Source:** `cargo install --path .`
 - **Usage:** 
   - Primary help command: `[tool-name] --help`
   - A placeholder section for "Common Patterns".
+- **Releasing:** Copy the Releasing section from the template `README.md`.
 - **Disclaimer:** A bold safety section explaining that the tool is provided "as-is" and any risks associated with its use (especially if it performs destructive actions).
 - **License:** MIT.
 

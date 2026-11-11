@@ -111,6 +111,12 @@ jobs:
             exit 1
           fi
 
+          cargo_version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          if [ "$TAG" != "v$cargo_version" ]; then
+            echo "::error::'$TAG' does not match the Cargo.toml version ($cargo_version). Bump the version in Cargo.toml and Cargo.lock before tagging."
+            exit 1
+          fi
+
           tagged_sha=$(git rev-list -n 1 "$TAG")
           if [ "$tagged_sha" != "$EXPECTED_SHA" ]; then
             echo "::error::'$TAG' points at $tagged_sha but this run checked out $EXPECTED_SHA."
