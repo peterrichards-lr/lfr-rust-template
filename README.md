@@ -2,6 +2,11 @@
 
 A modular template for building high-performance, cross-platform CLI tools for Liferay DXP, Liferay Cloud (LXC), and Client Extensions.
 
+## New in v0.8.0
+
+- **Bot Pull Requests:** `.github/rulesets/protect-main.json` and a [Repository Settings](#repository-settings) section set up the default branch the way `liferay-docker-manager` does: pull requests required with 0 approvals, squash only, no bypass actors, and GitHub Actions allowed to open pull requests.
+- **`no-issue-needed` Label:** Dependabot pull requests carry it, alongside the default `dependencies` and ecosystem labels.
+
 ## New in v0.7.0
 
 - **Version Gate:** The release workflow rejects tags that don't match the `Cargo.toml` version, so `--version` always reports the released version.

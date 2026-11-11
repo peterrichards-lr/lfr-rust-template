@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.8.0] - 2026-11-11
+
 ### Added
 
 - Add `.github/rulesets/protect-main.json` and a Repository Settings section to `README.md`: pull requests required with 0 approvals, squash only, Actions allowed to open PRs, and the `no-issue-needed` label.
@@ -14,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Label Dependabot pull requests `no-issue-needed`, alongside the default `dependencies` and ecosystem labels, so bot PRs are marked as intentionally having no linked issue.
+- Update Rust dependencies:
+  - `scraper` 0.27.0 → 0.29.0
+  - `serde_json` 1.0.151 → 1.0.154
+- Update GitHub Actions:
+  - `dtolnay/rust-toolchain` (pinned commit updated)
+  - `actions/upload-artifact` 7.0.1 → 7.0.2
+  - `actions/download-artifact` 8.0.1 → 8.0.2
 
 ## [0.7.0] - 2026-11-11
 
